@@ -24,29 +24,29 @@
             <TextBlock x:Name="ServerVersionText" Text="Versão: -"/>
         </StackPanel>
 
-        <ToggleButton x:Name="ConnectedToggle" Grid.Row="1" Content="Desconectado" Width="320" Height="32" IsChecked="False" IsEnabled="True" Margin="0,0,0,12"
+        <ToggleButton x:Name="ConnectedToggle" Grid.Row="1" Content="_Desconectado" Width="320" Height="32" IsChecked="False" IsEnabled="True" Margin="0,0,0,12"
                       Checked="ConnectedToggle_Checked" Unchecked="ConnectedToggle_Unchecked" />
 
         <StackPanel Grid.Row="2" Margin="0,0,0,8">
-            <TextBlock Text="Acelerador" FontWeight="Bold"/>
+            <TextBlock Text="Acelerador (Mouse esquerdo)" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Slider x:Name="ThrottleSlider" Minimum="0" Maximum="100" Width="400" ValueChanged="ThrottleSlider_ValueChanged"/>
+                <ProgressBar x:Name="ThrottleBar" Minimum="0" Maximum="100" Width="400" Height="24" Value="0"/>
                 <TextBlock x:Name="ThrottleValueText" Text="0%" Margin="8,0,0,0"/>
             </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Margin="0,0,0,8">
-            <TextBlock Text="Freio" FontWeight="Bold"/>
+            <TextBlock Text="Freio (V)" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Slider x:Name="BrakeSlider" Minimum="0" Maximum="100" Width="400" ValueChanged="BrakeSlider_ValueChanged"/>
+                <ProgressBar x:Name="BrakeBar" Minimum="0" Maximum="100" Width="400" Height="24" Value="0"/>
                 <TextBlock x:Name="BrakeValueText" Text="0%" Margin="8,0,0,0"/>
             </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="4" Margin="0,0,0,8">
-            <TextBlock Text="Embreagem" FontWeight="Bold"/>
+            <TextBlock Text="Embreagem (C)" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Slider x:Name="ClutchSlider" Minimum="0" Maximum="100" Width="400" ValueChanged="ClutchSlider_ValueChanged"/>
+                <ProgressBar x:Name="ClutchBar" Minimum="0" Maximum="100" Width="400" Height="24" Value="0"/>
                 <TextBlock x:Name="ClutchValueText" Text="0%" Margin="8,0,0,0"/>
             </StackPanel>
         </StackPanel>
