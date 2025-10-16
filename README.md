@@ -73,5 +73,4 @@
 
 - Limitations
   - No TLS configured; not suitable for production as is.
-  - No automated USB detection in the current build (manual toggle only). USB auto‑detection was scoped out to meet the current specification.
   - No automated tests are included yet; the server is simple and logs actions for manual validation.
