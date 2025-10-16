@@ -1,0 +1,2 @@
+obj\Debug\net8.0-windows/Pedal.cs \
+obj\Debug\net8.0-windows/PedalGrpc.cs: ../DeviceSimulator.Proto/Protos/pedal.proto

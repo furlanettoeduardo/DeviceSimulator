@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "DeviceSimulator.Proto";
+
+package devicesimulator;
+
+enum Axis {
+  AXIS_UNSPECIFIED = 0;
+  CLUTCH = 1;
+  BRAKE = 2;
+  THROTTLE = 3;
+}
+
+message AxisUpdateRequest {
+  Axis axis = 1;
+  int32 value = 2;
+  bool connected = 3;
+}
+
+message StatusUpdateRequest {
+  bool connected = 1;
+}
+
+message UpdateResponse {
+  bool ok = 1;
+}
+
+message Empty {}
+
+message ServerInfo {
+  string version = 1;
+}
+
+service DeviceService {
+  rpc UpdateAxis (AxisUpdateRequest) returns (UpdateResponse);
+  rpc UpdateStatus (StatusUpdateRequest) returns (UpdateResponse);
+  rpc GetServerInfo (Empty) returns (ServerInfo);
+}
