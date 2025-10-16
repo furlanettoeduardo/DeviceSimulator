@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using DeviceSimulator.Proto;
 using Grpc.Net.Client;
 using DeviceSimulator.Client.WPF.Logging;
+using System.Windows.Controls;
 
 namespace DeviceSimulator.Client.WPF;
 
@@ -100,31 +101,16 @@ public partial class MainWindow : Window
             DevLogger.Warn($"Failed to send status update: {ex.Message}");
         }
     }
-    private async void ThrottleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void UpdateBar(ProgressBar bar, TextBlock valueText, int value)
     {
-        var value = (int)Math.Round(e.NewValue);
-        ThrottleValueText.Text = $"{value}%";
-        await SendAxisAsync(Axis.Throttle, value);
-    }
-
-    private async void BrakeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        var value = (int)Math.Round(e.NewValue);
-        BrakeValueText.Text = $"{value}%";
-        await SendAxisAsync(Axis.Brake, value);
-    }
-
-    private async void ClutchSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        var value = (int)Math.Round(e.NewValue);
-        ClutchValueText.Text = $"{value}%";
-        await SendAxisAsync(Axis.Clutch, value);
+        bar.Value = value;
+        valueText.Text = $"{value}%";
     }
 
     private async void ConnectedToggle_Checked(object sender, RoutedEventArgs e)
     {
         _connected = true;
-        ConnectedToggle.Content = "Conectado";
+        ConnectedToggle.Content = "_Conectado";
         ConnectedToggle.Foreground = System.Windows.Media.Brushes.Green;
         DevLogger.Info("Device marked as connected");
         await SendStatusAsync();
@@ -133,47 +119,53 @@ public partial class MainWindow : Window
     private async void ConnectedToggle_Unchecked(object sender, RoutedEventArgs e)
     {
         _connected = false;
-        ConnectedToggle.Content = "Desconectado";
+        ConnectedToggle.Content = "_Desconectado";
         ConnectedToggle.Foreground = System.Windows.Media.Brushes.Red;
         ConnectedToggle.ToolTip = null;
         DevLogger.Info("Device marked as disconnected");
         await SendStatusAsync();
     }
 
-    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private async void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        ThrottleSlider.Value = 100;
+        UpdateBar(ThrottleBar, ThrottleValueText, 100);
+        await SendAxisAsync(Axis.Throttle, 100);
     }
 
-    private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    private async void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        ThrottleSlider.Value = 0;
+        UpdateBar(ThrottleBar, ThrottleValueText, 0);
+        await SendAxisAsync(Axis.Throttle, 0);
     }
 
-    private void Window_KeyDown(object sender, KeyEventArgs e)
+    private async void Window_KeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Space)
+        if (e.Key == Key.V)
         {
-            BrakeSlider.Value = 100;
+            UpdateBar(BrakeBar, BrakeValueText, 100);
+            await SendAxisAsync(Axis.Brake, 100);
             e.Handled = true;
         }
         else if (e.Key == Key.C)
         {
-            ClutchSlider.Value = 100;
+            UpdateBar(ClutchBar, ClutchValueText, 100);
+            await SendAxisAsync(Axis.Clutch, 100);
             e.Handled = true;
         }
     }
 
-    private void Window_KeyUp(object sender, KeyEventArgs e)
+    private async void Window_KeyUp(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Space)
+        if (e.Key == Key.V)
         {
-            BrakeSlider.Value = 0;
+            UpdateBar(BrakeBar, BrakeValueText, 0);
+            await SendAxisAsync(Axis.Brake, 0);
             e.Handled = true;
         }
         else if (e.Key == Key.C)
         {
-            ClutchSlider.Value = 0;
+            UpdateBar(ClutchBar, ClutchValueText, 0);
+            await SendAxisAsync(Axis.Clutch, 0);
             e.Handled = true;
         }
     }

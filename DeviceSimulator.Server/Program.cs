@@ -19,13 +19,14 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenLocalhost(5000, o => o.Protocols = HttpProtocols.Http2);
 });
 
-var app = builder.Build();
-
-// Console + file logging with environment-based level
+// Configure logging before building the app
+builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 var logDir = Path.Combine(AppContext.BaseDirectory, "logs");
 var logFile = $"server-{DateTime.Now:yyyy-MM-dd_HH-mm}.log";
 builder.Logging.AddFileLogger(logDir, logFile, isDevelopment ? LogLevel.Debug : LogLevel.Warning);
+
+var app = builder.Build();
 
 app.MapGrpcService<DeviceServiceImpl>();
 app.MapGet("/", () => "DeviceSimulator gRPC server. Use a gRPC client to communicate.");
