@@ -26,6 +26,33 @@
   - gRPC over HTTP/2 without TLS is enabled in the client via `AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true)` (development only).
   - If you need another port, change it in `DeviceSimulator.Server/Program.cs` where Kestrel is configured (`options.ListenLocalhost(5000, ...)`).
 
+## Environment & Logging
+
+- Overview
+  - Both server and client log to the console and to files under `logs/` next to the binaries (`AppContext.BaseDirectory`).
+  - File names: `server-YYYY-MM-DD_HH-mm.log` (server) and `client-YYYY-MM-DD_HH-mm.log` (client).
+
+- Environments
+  - Development
+    - Server: gRPC `EnableDetailedErrors = true`.
+    - Log level: `Debug`/`Information` (more verbose) to console and file.
+  - Production
+    - Server: gRPC `EnableDetailedErrors = false`.
+    - Log level: `Warning`/`Error` only to console and file.
+
+- How to set the environment (Windows PowerShell)
+  - Server (ASP.NET Core)
+    - Development: `$env:ASPNETCORE_ENVIRONMENT = "Development"`
+    - Production: `$env:ASPNETCORE_ENVIRONMENT = "Production"`
+  - Client (WPF)
+    - Development: `$env:DOTNET_ENVIRONMENT = "Development"`
+    - Production: `$env:DOTNET_ENVIRONMENT = "Production"`
+
+- Notes
+  - The server uses Kestrel on `localhost:5000` with HTTP/2 without TLS for local development.
+  - Log directory can be changed at code level if needed; by default it is `logs/` under the app directory.
+  - `.gitignore` includes `logs/`, `bin/`, and `obj/` so these artifacts are not committed.
+
 ## Features & How It Works
 
 - Requested features from the initial brief
