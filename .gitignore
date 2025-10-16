@@ -1,0 +1,59 @@
+# Root .gitignore for DeviceSimulator solution
+# Excludes build outputs, IDE caches, logs, and other non-essential artifacts
+
+# Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Logs
+logs/
+**/logs/
+*.log
+
+# Debug symbols and caches
+*.pdb
+*.mdb
+*.cache
+*.tmp
+*.trx
+*.svclog
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.assets.json
+project.nuget.cache
+
+# IDE / Editor
+.vs/
+.vscode/
+.idea/
+*.iml
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# WPF / XAML temporary
+*_wpftmp.*
+
+# Test results
+TestResults/
+
+# Publish output
+publish/
+**/publish/
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+$RECYCLE.BIN/
+
+# Local appsettings overrides
+*.local.json
