@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using DeviceSimulator.Proto;
 using Grpc.Net.Client;
+using DeviceSimulator.Client.WPF.Logging;
 
 namespace DeviceSimulator.Client.WPF;
 
@@ -31,8 +32,9 @@ public partial class MainWindow : Window
             var channel = GrpcChannel.ForAddress("http://localhost:5000");
             _client = new DeviceService.DeviceServiceClient(channel);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            DevLogger.Error("Failed to initialize gRPC client", ex);
             _client = null;
         }
     }
@@ -57,12 +59,14 @@ public partial class MainWindow : Window
             ServerStatusText.Text = "Servidor: Online";
             ServerStatusText.Foreground = System.Windows.Media.Brushes.Green;
             ServerVersionText.Text = $"Versão: {info.Version}";
+            DevLogger.Debug("Server ping successful");
         }
-        catch
+        catch (Exception ex)
         {
             ServerStatusText.Text = "Servidor: Offline";
             ServerStatusText.Foreground = System.Windows.Media.Brushes.Red;
             ServerVersionText.Text = "Versão: -";
+            DevLogger.Warn($"Server ping failed: {ex.Message}");
         }
     }
 
@@ -78,8 +82,9 @@ public partial class MainWindow : Window
                 Connected = _connected
             });
         }
-        catch
+        catch (Exception ex)
         {
+            DevLogger.Warn($"Failed to send axis update ({axis}, {value}%): {ex.Message}");
         }
     }
 
@@ -90,8 +95,9 @@ public partial class MainWindow : Window
         {
             await _client.UpdateStatusAsync(new StatusUpdateRequest { Connected = _connected });
         }
-        catch
+        catch (Exception ex)
         {
+            DevLogger.Warn($"Failed to send status update: {ex.Message}");
         }
     }
     private async void ThrottleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -120,6 +126,7 @@ public partial class MainWindow : Window
         _connected = true;
         ConnectedToggle.Content = "Conectado";
         ConnectedToggle.Foreground = System.Windows.Media.Brushes.Green;
+        DevLogger.Info("Device marked as connected");
         await SendStatusAsync();
     }
 
@@ -129,6 +136,7 @@ public partial class MainWindow : Window
         ConnectedToggle.Content = "Desconectado";
         ConnectedToggle.Foreground = System.Windows.Media.Brushes.Red;
         ConnectedToggle.ToolTip = null;
+        DevLogger.Info("Device marked as disconnected");
         await SendStatusAsync();
     }
 
