@@ -1,9 +1,17 @@
 using DeviceSimulator.Server.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Logging;
+using DeviceSimulator.Server.Logging;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddGrpc();
+var isDevelopment = builder.Environment.IsDevelopment();
+
+builder.Services.AddGrpc(options =>
+{
+    options.EnableDetailedErrors = isDevelopment;
+});
 
 // Configure Kestrel for HTTP/2 without TLS on localhost:5000
 builder.WebHost.ConfigureKestrel(options =>
@@ -12,6 +20,12 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 var app = builder.Build();
+
+// Console + file logging with environment-based level
+builder.Logging.AddConsole();
+var logDir = Path.Combine(AppContext.BaseDirectory, "logs");
+var logFile = $"server-{DateTime.Now:yyyy-MM-dd_HH-mm}.log";
+builder.Logging.AddFileLogger(logDir, logFile, isDevelopment ? LogLevel.Debug : LogLevel.Warning);
 
 app.MapGrpcService<DeviceServiceImpl>();
 app.MapGet("/", () => "DeviceSimulator gRPC server. Use a gRPC client to communicate.");
