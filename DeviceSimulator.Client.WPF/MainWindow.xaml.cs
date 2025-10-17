@@ -107,10 +107,15 @@ public partial class MainWindow : Window
         valueText.Text = $"{value}%";
     }
 
+    private void LogLocalInput(Axis axis, int value)
+    {
+        DevLogger.Info($"Local input: {axis}={value}% (connected={_connected})");
+    }
+
     private async void ConnectedToggle_Checked(object sender, RoutedEventArgs e)
     {
         _connected = true;
-        ConnectedToggle.Content = "_Conectado";
+        ConnectedToggle.Content = "Co_nectado";
         ConnectedToggle.Foreground = System.Windows.Media.Brushes.Green;
         DevLogger.Info("Device marked as connected");
         await SendStatusAsync();
@@ -128,12 +133,24 @@ public partial class MainWindow : Window
 
     private async void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        LogLocalInput(Axis.Throttle, 100);
+        if (!_connected)
+        {
+            e.Handled = true;
+            return;
+        }
         UpdateBar(ThrottleBar, ThrottleValueText, 100);
         await SendAxisAsync(Axis.Throttle, 100);
     }
 
     private async void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
+        LogLocalInput(Axis.Throttle, 0);
+        if (!_connected)
+        {
+            e.Handled = true;
+            return;
+        }
         UpdateBar(ThrottleBar, ThrottleValueText, 0);
         await SendAxisAsync(Axis.Throttle, 0);
     }
@@ -142,12 +159,24 @@ public partial class MainWindow : Window
     {
         if (e.Key == Key.V)
         {
+            LogLocalInput(Axis.Brake, 100);
+            if (!_connected)
+            {
+                e.Handled = true;
+                return;
+            }
             UpdateBar(BrakeBar, BrakeValueText, 100);
             await SendAxisAsync(Axis.Brake, 100);
             e.Handled = true;
         }
         else if (e.Key == Key.C)
         {
+            LogLocalInput(Axis.Clutch, 100);
+            if (!_connected)
+            {
+                e.Handled = true;
+                return;
+            }
             UpdateBar(ClutchBar, ClutchValueText, 100);
             await SendAxisAsync(Axis.Clutch, 100);
             e.Handled = true;
@@ -158,12 +187,24 @@ public partial class MainWindow : Window
     {
         if (e.Key == Key.V)
         {
+            LogLocalInput(Axis.Brake, 0);
+            if (!_connected)
+            {
+                e.Handled = true;
+                return;
+            }
             UpdateBar(BrakeBar, BrakeValueText, 0);
             await SendAxisAsync(Axis.Brake, 0);
             e.Handled = true;
         }
         else if (e.Key == Key.C)
         {
+            LogLocalInput(Axis.Clutch, 0);
+            if (!_connected)
+            {
+                e.Handled = true;
+                return;
+            }
             UpdateBar(ClutchBar, ClutchValueText, 0);
             await SendAxisAsync(Axis.Clutch, 0);
             e.Handled = true;
