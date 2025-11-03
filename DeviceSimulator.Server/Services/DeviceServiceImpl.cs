@@ -33,7 +33,7 @@ public class DeviceServiceImpl : DeviceService.DeviceServiceBase
 
     public override Task<ServerInfo> GetServerInfo(Empty request, ServerCallContext context)
     {
-        return Task.FromResult(new ServerInfo { Version = "1.0.0" });
+        return Task.FromResult(new ServerInfo { Version = "1.0.1" });
     }
 
     private static string AxisToName(Axis axis)
