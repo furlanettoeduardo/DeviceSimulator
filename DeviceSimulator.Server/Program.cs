@@ -13,6 +13,12 @@ builder.Services.AddGrpc(options =>
     options.EnableDetailedErrors = isDevelopment;
 });
 
+// Add gRPC Reflection for development
+if (isDevelopment)
+{
+    builder.Services.AddGrpcReflection();
+}
+
 // Configure Kestrel for HTTP/2 without TLS on localhost:5000
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -29,6 +35,13 @@ builder.Logging.AddFileLogger(logDir, logFile, isDevelopment ? LogLevel.Debug : 
 var app = builder.Build();
 
 app.MapGrpcService<DeviceServiceImpl>();
+
+// Map gRPC Reflection service for development
+if (isDevelopment)
+{
+    app.MapGrpcReflectionService();
+}
+
 app.MapGet("/", () => "DeviceSimulator gRPC server. Use a gRPC client to communicate.");
 
 app.Run();
